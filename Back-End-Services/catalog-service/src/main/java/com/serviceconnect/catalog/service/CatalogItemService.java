@@ -136,7 +136,8 @@ public class CatalogItemService {
 
         providerServiceClient
                 .validateApprovedProvider(
-                        item.getProviderId()
+                        item.getProviderId(),
+                        authorizationHeader
                 );
 
 
@@ -293,7 +294,8 @@ public class CatalogItemService {
 
         providerServiceClient
                 .validateApprovedProvider(
-                        providerId
+                        providerId,
+                        authorizationHeader
                 );
 
 

@@ -1,0 +1,44 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:auth-test;MODE=PostgreSQL;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    open-in-view: false
+
+  flyway:
+    enabled: false
+
+  cloud:
+    discovery:
+      enabled: false
+
+eureka:
+  client:
+    enabled: false
+
+app:
+  jwt:
+    secret: VGhpc0lzQVRlc3RTZWNyZXRGb3JDaGFuZ2VBbmRJdFVzZWQ=
+    issuer: serviceconnect-auth-test
+    access-token-expiration: 900000
+
+auth-service:
+  url: http://localhost:8081
+
+services:
+  user:
+    url: http://localhost:8082
+
+brevo:
+  api-key: test-api-key
+  api-url: http://localhost
+  sender:
+    name: ServiceConnect Test
+    email: test@example.com
+  sms-api-url: http://localhost
+  sms-sender: ServiceConnectTest

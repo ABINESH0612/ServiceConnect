@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClient;
 
 @Component
@@ -19,17 +20,21 @@ public class CatalogServiceClient {
             Long catalogItemId,
             String authorizationHeader) {
 
-        return restClientBuilder
-                .baseUrl(catalogServiceUrl)
-                .build()
-                .get()
-                .uri("/api/catalog/{id}", catalogItemId)
-                .header(
-                        HttpHeaders.AUTHORIZATION,
-                        authorizationHeader
-                )
-                .retrieve()
-                .body(CatalogItemResponse.class);
+        try {
+            return restClientBuilder
+                    .baseUrl(catalogServiceUrl)
+                    .build()
+                    .get()
+                    .uri("/api/catalog/{id}", catalogItemId)
+                    .header(
+                            HttpHeaders.AUTHORIZATION,
+                            authorizationHeader
+                    )
+                    .retrieve()
+                    .body(CatalogItemResponse.class);
+        } catch (HttpClientErrorException.NotFound exception) {
+            return null;
+        }
     }
 
     public record CatalogItemResponse(

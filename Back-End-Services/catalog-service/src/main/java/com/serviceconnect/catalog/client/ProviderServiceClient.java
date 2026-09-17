@@ -1,5 +1,6 @@
 package com.serviceconnect.catalog.client;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -10,7 +11,6 @@ import org.springframework.web.client.RestClient;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.OffsetDateTime;
-import java.util.Arrays;
 import java.util.List;
 
 @Component
@@ -30,7 +30,7 @@ public class ProviderServiceClient {
     public List<ProviderResponse> getApprovedProviders(
             String authorizationHeader) {
 
-        ProviderResponse[] response =
+        ProviderPageResponse response =
                 restClientBuilder
                         .baseUrl(providerServiceUrl)
                         .build()
@@ -41,13 +41,15 @@ public class ProviderServiceClient {
                                 authorizationHeader
                         )
                         .retrieve()
-                        .body(ProviderResponse[].class);
+                        .body(ProviderPageResponse.class);
 
-        if (response == null) {
+        if (response == null
+                || response.content() == null) {
+
             return List.of();
         }
 
-        return Arrays.asList(response);
+        return response.content();
     }
 
 
@@ -115,11 +117,12 @@ public class ProviderServiceClient {
     // ============================================================
 
     public void validateApprovedProvider(
-            Long providerId) {
+            Long providerId,
+            String authorizationHeader) {
 
         try {
 
-            ProviderResponse response =
+            var requestSpec =
                     restClientBuilder
                             .baseUrl(providerServiceUrl)
                             .build()
@@ -127,7 +130,19 @@ public class ProviderServiceClient {
                             .uri(
                                     "/api/v1/providers/{providerId}/public",
                                     providerId
-                            )
+                            );
+
+            if (authorizationHeader != null
+                    && !authorizationHeader.isBlank()) {
+
+                requestSpec.header(
+                        HttpHeaders.AUTHORIZATION,
+                        authorizationHeader
+                );
+            }
+
+            ProviderResponse response =
+                    requestSpec
                             .retrieve()
                             .body(ProviderResponse.class);
 
@@ -156,9 +171,36 @@ public class ProviderServiceClient {
 
 
     // ============================================================
+    // PROVIDER PAGE RESPONSE
+    // ============================================================
+    //
+    // provider-service returns:
+    //
+    // {
+    //   "content": [...],
+    //   "page": 0,
+    //   "size": 20,
+    //   "totalElements": 1,
+    //   "totalPages": 1,
+    //   "first": true,
+    //   "last": true
+    // }
+    //
+    // We only need the content list here.
+    // ============================================================
+
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public record ProviderPageResponse(
+            List<ProviderResponse> content
+    ) {
+    }
+
+
+    // ============================================================
     // PROVIDER RESPONSE
     // ============================================================
 
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public record ProviderResponse(
 
             Long id,

@@ -7,7 +7,7 @@ import com.serviceconnect.provider.dto.response.PageResponse;
 import com.serviceconnect.provider.dto.response.ProviderOnboardingStatusResponse;
 import com.serviceconnect.provider.dto.response.ProviderResponse;
 import com.serviceconnect.provider.service.ProviderService;
-
+import org.springframework.security.access.AccessDeniedException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -177,6 +177,46 @@ public class ProviderController {
 
         Long userId =
                 getUserId(jwt);
+
+        return ResponseEntity.ok(
+                providerService.getProviderByUserId(
+                        userId
+                )
+        );
+    }
+
+
+    // ============================================================
+    // GET PROVIDER BY USER ID
+    // PROVIDER (OWN) / ADMIN
+    // ============================================================
+
+    @GetMapping("/user/{userId}")
+    @PreAuthorize("hasAnyRole('PROVIDER', 'ADMIN')")
+    public ResponseEntity<ProviderResponse> getProviderByUserId(
+
+            @PathVariable
+            @Positive
+            Long userId,
+
+            @AuthenticationPrincipal
+            Jwt jwt) {
+
+        Long authenticatedUserId =
+                getUserId(jwt);
+
+        String role =
+                getRole(jwt);
+
+        // PROVIDER can only view own profile
+        if ("PROVIDER".equals(role)
+                && !authenticatedUserId.equals(userId)) {
+
+            throw new org.springframework.web.server.ResponseStatusException(
+                    org.springframework.http.HttpStatus.FORBIDDEN,
+                    "You can only view your own provider profile"
+            );
+        }
 
         return ResponseEntity.ok(
                 providerService.getProviderByUserId(
