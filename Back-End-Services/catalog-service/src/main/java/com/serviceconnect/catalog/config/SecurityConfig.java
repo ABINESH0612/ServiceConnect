@@ -117,6 +117,12 @@ public class SecurityConfig {
                                 "/actuator/health/**"
                         ).permitAll()
 
+                        .requestMatchers(
+                                org.springframework.http.HttpMethod.GET,
+                                "/api/catalog",
+                                "/api/catalog/**"
+                        ).permitAll()
+
                         .anyRequest().authenticated()
                 )
 

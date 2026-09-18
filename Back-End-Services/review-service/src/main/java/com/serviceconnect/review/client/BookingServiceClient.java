@@ -1,5 +1,6 @@
 package com.serviceconnect.review.client;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -46,6 +47,7 @@ public class BookingServiceClient {
     // BOOKING RESPONSE
     // ============================================================
 
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public record BookingResponse(
 
             Long id,

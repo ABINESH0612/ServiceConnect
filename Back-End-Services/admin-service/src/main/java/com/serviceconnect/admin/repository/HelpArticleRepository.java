@@ -27,27 +27,33 @@ public interface HelpArticleRepository
             Long id
     );
 
+    Page<HelpArticle> findByPublishedTrueOrderByDisplayOrderAscTitleAsc(
+            Pageable pageable
+    );
+
+    Page<HelpArticle> findByPublishedTrueAndCategoryOrderByDisplayOrderAscTitleAsc(
+            String category,
+            Pageable pageable
+    );
+
     @Query("""
             SELECT article
             FROM HelpArticle article
             WHERE article.published = true
               AND (:category IS NULL OR article.category = :category)
               AND (
-                    :search IS NULL
-                    OR LOWER(article.title)
-                        LIKE LOWER(CONCAT('%', :search, '%'))
-                    OR LOWER(article.content)
-                        LIKE LOWER(CONCAT('%', :search, '%'))
+                     LOWER(article.title) LIKE :pattern
+                     OR LOWER(article.content) LIKE :pattern
               )
             ORDER BY article.displayOrder ASC,
                      article.title ASC
             """)
-    Page<HelpArticle> searchPublished(
+    Page<HelpArticle> searchPublishedWithPattern(
             @Param("category")
             String category,
 
-            @Param("search")
-            String search,
+            @Param("pattern")
+            String pattern,
 
             Pageable pageable
     );

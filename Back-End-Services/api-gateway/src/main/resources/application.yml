@@ -154,6 +154,7 @@ spring:
               predicates:
                 - Path=/api/v1/reviews/**
               filters:
+                - RewritePath=/api/v1/reviews/(?<segment>.*), /api/reviews/$\{segment\}
                 - name: CircuitBreaker
                   args:
                     name: reviewCircuitBreaker

@@ -15,12 +15,14 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 
 import org.springframework.web.server.ResponseStatusException;
+import lombok.extern.slf4j.Slf4j;
 
 import java.time.OffsetDateTime;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 @RestControllerAdvice
+@Slf4j
 public class GlobalExceptionHandler {
 
     // ============================================================
@@ -233,6 +235,8 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiErrorResponse> handleException(
             Exception exception,
             HttpServletRequest request) {
+
+        log.error("Unhandled exception processing request: {}", request.getRequestURI(), exception);
 
         return buildResponse(
                 HttpStatus.INTERNAL_SERVER_ERROR,

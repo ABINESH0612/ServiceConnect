@@ -46,12 +46,24 @@ public class HelpCenterService {
         String normalizedSearch =
                 normalize(search);
 
-        Page<HelpArticle> page =
-                helpArticleRepository.searchPublished(
-                        normalizedCategory,
-                        normalizedSearch,
-                        pageable
-                );
+        Page<HelpArticle> page;
+        if (normalizedSearch != null) {
+            String pattern = "%" + normalizedSearch.toLowerCase() + "%";
+            page = helpArticleRepository.searchPublishedWithPattern(
+                    normalizedCategory,
+                    pattern,
+                    pageable
+            );
+        } else if (normalizedCategory != null) {
+            page = helpArticleRepository.findByPublishedTrueAndCategoryOrderByDisplayOrderAscTitleAsc(
+                    normalizedCategory,
+                    pageable
+            );
+        } else {
+            page = helpArticleRepository.findByPublishedTrueOrderByDisplayOrderAscTitleAsc(
+                    pageable
+            );
+        }
 
         return toPageResponse(page);
     }

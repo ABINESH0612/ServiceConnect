@@ -89,11 +89,10 @@ public class ProviderAvailabilityController {
 
 
     // ============================================================
-    // CUSTOMER / ADMIN - GET ACTIVE AVAILABILITY
+    // CUSTOMER / ADMIN / PUBLIC - GET ACTIVE AVAILABILITY
     // ============================================================
 
     @GetMapping("/{providerId}/availability/active")
-    @PreAuthorize("hasAnyRole('CUSTOMER', 'ADMIN')")
     public ResponseEntity<List<ProviderAvailabilityResponse>> getActive(
             @PathVariable
             @Positive

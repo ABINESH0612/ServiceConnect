@@ -80,7 +80,8 @@ public class CatalogItemController {
             Long id,
 
             @RequestHeader(
-                    HttpHeaders.AUTHORIZATION
+                    value = HttpHeaders.AUTHORIZATION,
+                    required = false
             )
             String authorizationHeader) {
 
@@ -107,7 +108,8 @@ public class CatalogItemController {
             String category,
 
             @RequestHeader(
-                    HttpHeaders.AUTHORIZATION
+                    value = HttpHeaders.AUTHORIZATION,
+                    required = false
             )
             String authorizationHeader,
 
@@ -140,7 +142,8 @@ public class CatalogItemController {
             Long providerId,
 
             @RequestHeader(
-                    HttpHeaders.AUTHORIZATION
+                    value = HttpHeaders.AUTHORIZATION,
+                    required = false
             )
             String authorizationHeader,
 

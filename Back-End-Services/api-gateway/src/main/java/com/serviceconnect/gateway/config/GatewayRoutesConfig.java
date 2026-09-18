@@ -38,6 +38,7 @@ public class GatewayRoutesConfig {
 
                 .route("review-service", route -> route
                         .path("/api/v1/reviews/**")
+                        .filters(f -> f.rewritePath("/api/v1/reviews/(?<segment>.*)", "/api/reviews/${segment}"))
                         .uri("lb://review-service"))
 
                 .build();

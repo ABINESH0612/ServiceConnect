@@ -306,11 +306,10 @@ public class ProviderController {
 
 
     // ============================================================
-    // CUSTOMER - GET APPROVED PROVIDERS
+    // CUSTOMER / PUBLIC - GET APPROVED PROVIDERS
     // ============================================================
 
     @GetMapping
-    @PreAuthorize("hasRole('CUSTOMER')")
     public ResponseEntity<PageResponse<ProviderResponse>>
     getApprovedProviders(
 
@@ -372,11 +371,10 @@ public class ProviderController {
 
 
     // ============================================================
-    // CUSTOMER - GET APPROVED PROVIDER
+    // CUSTOMER / PUBLIC - GET APPROVED PROVIDER
     // ============================================================
 
     @GetMapping("/{providerId}/public")
-    @PreAuthorize("hasRole('CUSTOMER')")
     public ResponseEntity<ProviderResponse> getApprovedProvider(
 
             @PathVariable

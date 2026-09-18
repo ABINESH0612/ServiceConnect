@@ -30,16 +30,21 @@ public class ProviderServiceClient {
     public List<ProviderResponse> getApprovedProviders(
             String authorizationHeader) {
 
+        var requestSpec = restClientBuilder
+                .baseUrl(providerServiceUrl)
+                .build()
+                .get()
+                .uri("/api/v1/providers");
+
+        if (authorizationHeader != null && !authorizationHeader.isBlank()) {
+            requestSpec.header(
+                    HttpHeaders.AUTHORIZATION,
+                    authorizationHeader
+            );
+        }
+
         ProviderPageResponse response =
-                restClientBuilder
-                        .baseUrl(providerServiceUrl)
-                        .build()
-                        .get()
-                        .uri("/api/v1/providers")
-                        .header(
-                                HttpHeaders.AUTHORIZATION,
-                                authorizationHeader
-                        )
+                requestSpec
                         .retrieve()
                         .body(ProviderPageResponse.class);
 
