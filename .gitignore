@@ -86,3 +86,14 @@ Desktop.ini
 *.swp
 *.swo
 *~
+
+# ================================================================
+# Node / Frontend
+# ================================================================
+node_modules/
+**/node_modules/
+dist/
+**/dist/
+dist-ssr/
+**/dist-ssr/
+npm-debug.log*
